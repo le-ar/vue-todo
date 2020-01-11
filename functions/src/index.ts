@@ -1,24 +1,27 @@
 import * as functions from 'firebase-functions';
 
-var admin = require("firebase-admin");
+const admin = require("firebase-admin");
 
-var serviceAccount = require("../keys/key.secure.json");
+const serviceAccount = require("../keys/key.secure.json");
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: "https://kt-team-e10d4.firebaseio.com"
 });
 
-exports.onInstanceCreate = functions.firestore.document('projects/{projectId}/instances/{instanceId}')
-    .onCreate((snap, context) =>
-        admin.firestore.collection('projects').doc(context.params.projectId).update({
+exports.onInstanceCreate = functions.firestore.document('todos/{todoId}')
+    .onCreate((snap, context) => {
+        admin.firestore().collection('docs_count').doc('todos').update({
             instanceCount: admin.firestore.FieldValue.increment(1),
+        });
+        return admin.firestore().collection('todos').doc(context.params.todoId).update({
+            createdAt: admin.firestore.FieldValue.serverTimestamp()
         })
-    );
+    });
 
-exports.onInstanceDelete = functions.firestore.document('projects/{projectId}/instances/{instanceId}')
+exports.onInstanceDelete = functions.firestore.document('todos/{todoId}')
     .onDelete((snap, context) =>
-        admin.firestore.collection('projects').doc(context.params.projectId).update({
+        admin.firestore().collection('docs_count').doc('todos').update({
             instanceCount: admin.firestore.FieldValue.increment(-1),
         })
     );
