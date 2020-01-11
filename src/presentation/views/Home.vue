@@ -27,16 +27,25 @@ import { moduleName } from '../vuex/todo_vuex';
   }
 })
 export default class Home extends Vue {
+  todosCount: number = 0;
+  pageCount: number = 1;
+
   created() {
     this.$store.dispatch(moduleName + '/GET_TODOS_COUNT');
-  }
+    let mutationName = moduleName + '/SET_TODOS_COUNT';
+    this.$store.subscribe((mutationName, state) => {
+      if (typeof state[moduleName] !== 'undefined') {
+        this.todosCount = state[moduleName].allTodos.length;
+        
+        let pages = Math.floor(this.todosCount / 10);
 
-  get pageCount() {
-    let pages = Math.floor(this.$store.state[moduleName].todosCount / 10);
-    if (this.$store.state[moduleName].todosCount % 10 > 0) {
-      pages += 1;
-    }
-    return pages;
+        if (this.todosCount % 10 > 0) {
+          pages += 1;
+        }
+        
+        this.pageCount = pages;
+      }
+    });
   }
 
   get selectedPage() {

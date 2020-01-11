@@ -60,7 +60,8 @@ class TodoVuex {
             commit('SET_TODOS_COUNT', todosCount);
             commit('SET_TODOS_COUNT_LOADED', true);
         },
-        ADD_TODO: async ({ dispatch }, payload) => {
+        ADD_TODO: async ({ dispatch, commit }, payload) => {
+            commit('SET_IS_TODOS_LOADED', false);
             await this.usecases.addTodoUseCase.execute(payload);
             dispatch('GET_TODOS_COUNT');
             dispatch('LOAD_TODOS');
