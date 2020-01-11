@@ -1,16 +1,16 @@
 import FirestoreRepository from "../repositories/firestore_repository";
 import TodoEntity from '../entities/todo_entity';
 
-class AddTodoUseCase {
+class RemoveTodoUseCase {
     firestoreRepository: FirestoreRepository;
 
     constructor(firestoreRepository: FirestoreRepository) {
         this.firestoreRepository = firestoreRepository;
     }
 
-    async execute(text: string): Promise<any> {
-        return await this.firestoreRepository.addTodo(new TodoEntity('', false, text, 0));
+    async execute(uid: string): Promise<any> {
+        return await this.firestoreRepository.removeTodo(new TodoEntity(uid, false, '', 0));
     }
 }
 
-export default AddTodoUseCase;
+export default RemoveTodoUseCase;

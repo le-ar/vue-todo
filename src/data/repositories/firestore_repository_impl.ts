@@ -11,9 +11,16 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
         this.firestoreDatasource = firestoreDatasource;
         this.localDatasource = localDatasource;
     }
+
+    async removeTodo(todoModel: TodoEntity): Promise<any> {
+        return await this.firestoreDatasource.removeTodo(todoModel);
+    }
+
+    async updateTodoCkeck(todoModel: TodoEntity) {
+        this.firestoreDatasource.updateTodoCkeck(todoModel);
+    }
+
     async addTodo(todoModel: TodoEntity): Promise<any> {
-        console.log(todoModel);
-        
         return await this.firestoreDatasource.addTodo(todoModel);
     }
 

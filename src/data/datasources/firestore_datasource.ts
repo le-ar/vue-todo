@@ -7,6 +7,8 @@ interface FirestoreDatasource {
     getTodoCount(): Promise<number>
     getAllTodos(): Promise<TodoModel[]>
     addTodo(todoModel: TodoModel): Promise<any>;
+    updateTodoCkeck(todoModel: TodoModel): void;
+    removeTodo(todoModel: TodoModel): Promise<any>;
 }
 
 class FirestoreDatasourceImpl implements FirestoreDatasource {
@@ -14,6 +16,16 @@ class FirestoreDatasourceImpl implements FirestoreDatasource {
 
     constructor(client: firebase.firestore.Firestore) {
         this.client = client;
+    }
+
+    async removeTodo(todoModel: TodoModel): Promise<any> {
+        return await this.client.collection('todos').doc(todoModel.UID).delete();
+    }
+
+    async updateTodoCkeck(todoModel: TodoModel) {
+        this.client.collection('todos').doc(todoModel.UID).update({
+            is_completed: todoModel.isCompleted,
+        });
     }
 
     async addTodo(todoModel: TodoModel): Promise<any> {

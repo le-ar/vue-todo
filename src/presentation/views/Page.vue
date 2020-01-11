@@ -16,9 +16,15 @@
       </div>
       <div v-else>
         <div class="todo" v-for="todo in todos" :key="todo.UID">
-          <input class="todo__checkbox" type="checkbox" v-model="todo.isCompleted" />
+          <input
+            class="todo__checkbox"
+            type="checkbox"
+            v-model="todo.isCompleted"
+            @change="toggleTodo(todo)"
+            :value="todo.isCompleted"
+          />
           <span class="todo__text">{{ todo.text }}</span>
-          <button class="todo__remove"></button>
+          <button class="todo__remove" @click="removeTodo(todo.UID)"></button>
         </div>
       </div>
     </div>
@@ -28,6 +34,7 @@
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 import { moduleName } from '../vuex/todo_vuex';
 import BaseLoader from '../components/BaseLoader.vue';
+import TodoEntity from '../../domain/entities/todo_entity';
 
 @Component({
   components: {
@@ -44,8 +51,20 @@ export default class Page extends Vue {
   }
 
   addTodo() {
-    this.$router.push('/').catch(err => {});
+    if (this.textNewTodo.length === 0) {
+      alert('Wrong title');
+      return;
+    }
+    this.$router.push('/').catch(err => { });
     this.$store.dispatch(moduleName + '/ADD_TODO', this.textNewTodo);
+  }
+
+  removeTodo(uid: string) {
+    this.$store.dispatch(moduleName + '/REMOVE_TODO', uid);
+  }
+
+  toggleTodo(todo: TodoEntity) {
+    this.$store.dispatch(moduleName + '/TOGGLE_TODO_CHECK', todo);
   }
 
   updateCurrentPage() {
@@ -59,7 +78,7 @@ export default class Page extends Vue {
       return [];
     }
     if (allTodos.length <= this.id * 10) {
-      this.$router.push('/').catch(err => {});
+      this.$router.push('/').catch(err => { });
       return [];
     }
     if (allTodos.length - this.id * 10 > 10) {
@@ -128,6 +147,8 @@ export default class Page extends Vue {
     background-position: center center;
     background-color: transparent;
     border: none;
+    cursor: pointer;
+    width: 16px;
   }
 }
 

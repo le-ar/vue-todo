@@ -2,6 +2,8 @@ import GetTodoCountUseCase from "@/domain/usecases/get_todo_count";
 import { MutationTree, ActionTree, Store } from 'Vuex';
 import GetAllTodosUseCase from '@/domain/usecases/get_all_todos';
 import AddTodoUseCase from '@/domain/usecases/add_todo';
+import RemoveTodoUseCase from '@/domain/usecases/remove_todo';
+import UpdateTodoCheckUseCase from '@/domain/usecases/update_todo_ckeck';
 
 const moduleName = 'todo';
 
@@ -10,6 +12,8 @@ class TodoVuex {
         getTodoCountUseCase: GetTodoCountUseCase,
         getAllTodosUseCase: GetAllTodosUseCase,
         addTodoUseCase: AddTodoUseCase,
+        removeTodoUseCase: RemoveTodoUseCase,
+        updateTodoCheckUseCase: UpdateTodoCheckUseCase,
     };
     vuex: Store<any>;
 
@@ -17,6 +21,8 @@ class TodoVuex {
         getTodoCountUseCase: GetTodoCountUseCase,
         getAllTodosUseCase: GetAllTodosUseCase,
         addTodoUseCase: AddTodoUseCase,
+        removeTodoUseCase: RemoveTodoUseCase,
+        updateTodoCheckUseCase: UpdateTodoCheckUseCase,
     }) {
         this.usecases = usecases;
         this.vuex = vuex;
@@ -56,10 +62,19 @@ class TodoVuex {
             dispatch('GET_TODOS_COUNT');
             dispatch('LOAD_TODOS');
         },
+        REMOVE_TODO: async ({ dispatch, commit }, uid) => {
+            commit('SET_IS_TODOS_LOADED', false);
+            await this.usecases.removeTodoUseCase.execute(uid);
+            dispatch('GET_TODOS_COUNT');
+            dispatch('LOAD_TODOS');
+        },
         LOAD_TODOS: async ({ commit, state }) => {
             commit('SET_IS_TODOS_LOADED', false);
             commit('SET_ALL_TODOS', await this.usecases.getAllTodosUseCase.execute());
             commit('SET_IS_TODOS_LOADED', true);
+        },
+        TOGGLE_TODO_CHECK: async ({ commit, state }, todo) => {
+            this.usecases.updateTodoCheckUseCase.execute(todo);
         }
     }
 

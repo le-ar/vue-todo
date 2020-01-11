@@ -26,9 +26,7 @@ class LocalDatasourceImpl implements LocalDatasource {
         return result;
     }
     cacheTodos(todos: TodoModel[]): void {
-        let jsonTodos = JSON.stringify(todos);
-        console.log(todos, JSON.stringify(todos));
-        
+        let jsonTodos = JSON.stringify(todos);        
         localStorage.setItem('todos', jsonTodos);
     }
 }

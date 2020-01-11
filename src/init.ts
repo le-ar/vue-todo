@@ -8,6 +8,8 @@ import store from './presentation/vuex';
 import GetAllTodosUseCase from './domain/usecases/get_all_todos';
 import { LocalDatasourceImpl } from './data/datasources/local_datasource';
 import AddTodoUseCase from './domain/usecases/add_todo';
+import RemoveTodoUseCase from './domain/usecases/remove_todo';
+import UpdateTodoCheckUseCase from './domain/usecases/update_todo_ckeck';
 
 
 function InitApp() {
@@ -24,12 +26,16 @@ function InitApp() {
     let getTodoCountUseCase = new GetTodoCountUseCase(firestoreRepository);
     let getAllTodosUseCase = new GetAllTodosUseCase(firestoreRepository);
     let addTodoUseCase = new AddTodoUseCase(firestoreRepository);
+    let removeTodoUseCase = new RemoveTodoUseCase(firestoreRepository);
+    let updateTodoCheckUseCase = new UpdateTodoCheckUseCase(firestoreRepository);
 
     //! Controllers
     let todoVuex = new TodoVuex(store, {
         getTodoCountUseCase: getTodoCountUseCase,
         getAllTodosUseCase: getAllTodosUseCase,
         addTodoUseCase: addTodoUseCase,
+        removeTodoUseCase: removeTodoUseCase,
+        updateTodoCheckUseCase: updateTodoCheckUseCase,
     })
     todoVuex.initVuexModuleIfNotYet();
 }
