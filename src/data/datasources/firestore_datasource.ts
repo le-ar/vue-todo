@@ -8,6 +8,7 @@ interface FirestoreDatasource {
     getAllTodos(): Promise<TodoModel[]>
     addTodo(todoModel: TodoModel): Promise<any>;
     updateTodoCkeck(todoModel: TodoModel): void;
+    updateTodoText(todoModel: TodoModel): void;
     removeTodo(todoModel: TodoModel): Promise<any>;
 }
 
@@ -25,6 +26,12 @@ class FirestoreDatasourceImpl implements FirestoreDatasource {
     async updateTodoCkeck(todoModel: TodoModel) {
         this.client.collection('todos').doc(todoModel.UID).update({
             is_completed: todoModel.isCompleted,
+        });
+    }
+
+    async updateTodoText(todoModel: TodoModel) {
+        this.client.collection('todos').doc(todoModel.UID).update({
+            text: todoModel.text,
         });
     }
 

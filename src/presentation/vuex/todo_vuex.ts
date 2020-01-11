@@ -4,6 +4,7 @@ import GetAllTodosUseCase from '@/domain/usecases/get_all_todos';
 import AddTodoUseCase from '@/domain/usecases/add_todo';
 import RemoveTodoUseCase from '@/domain/usecases/remove_todo';
 import UpdateTodoCheckUseCase from '@/domain/usecases/update_todo_ckeck';
+import UpdateTodoTextUseCase from '@/domain/usecases/update_todo_text';
 
 const moduleName = 'todo';
 
@@ -14,6 +15,7 @@ class TodoVuex {
         addTodoUseCase: AddTodoUseCase,
         removeTodoUseCase: RemoveTodoUseCase,
         updateTodoCheckUseCase: UpdateTodoCheckUseCase,
+        updateTodoTextUseCase: UpdateTodoTextUseCase,
     };
     vuex: Store<any>;
 
@@ -23,6 +25,7 @@ class TodoVuex {
         addTodoUseCase: AddTodoUseCase,
         removeTodoUseCase: RemoveTodoUseCase,
         updateTodoCheckUseCase: UpdateTodoCheckUseCase,
+        updateTodoTextUseCase: UpdateTodoTextUseCase,
     }) {
         this.usecases = usecases;
         this.vuex = vuex;
@@ -75,7 +78,10 @@ class TodoVuex {
         },
         TOGGLE_TODO_CHECK: async ({ commit, state }, todo) => {
             this.usecases.updateTodoCheckUseCase.execute(todo);
-        }
+        },
+        UPDATE_TODO_TEXT: async ({ commit, state }, todo) => {
+            this.usecases.updateTodoTextUseCase.execute(todo);
+        },
     }
 
     mutations: MutationTree<any> = {

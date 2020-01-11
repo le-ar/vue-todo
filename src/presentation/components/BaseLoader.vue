@@ -1,8 +1,14 @@
 <template>
-  <div class="lds-dual-ring"></div>
+  <div class="centered">
+    <div class="lds-dual-ring"></div>
+  </div>
 </template>
 
 <style>
+.centered {
+  display: flex;
+  justify-content: center;
+}
 .lds-dual-ring {
   display: inline-block;
   width: 40px;

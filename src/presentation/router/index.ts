@@ -7,8 +7,20 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    path: '/detailed/:uid',
+    name: 'detailed',
+    component: () => import(/* webpackChunkName: "detailed" */ '../views/Detailed.vue'),
+    beforeEnter: (to: Route, from: Route, next: Function) => {
+      if (typeof to.params.uid !== 'string') {
+        next('/');
+      }
+
+      next();
+    },
+    props: true,
+  },
+  {
     path: '/',
-    name: 'home',
     component: Home,
     children: [
       {
@@ -27,8 +39,8 @@ const routes = [
         props: (route: Route) => ({ id: parseInt(route.params.id) - 1 })
       },
       {
-        path: '*',
-        name: 'pageDefault',
+        path: '/',
+        name: 'home',
         component: () => import(/* webpackChunkName: "page" */ '../views/Page.vue'),
         props: (route: Route) => ({ id: 0 })
       }
@@ -36,7 +48,7 @@ const routes = [
   },
   {
     path: '*',
-    redirect: { name: 'home' },
+    redirect: '/',
   }
 ]
 

@@ -10,6 +10,7 @@ import { LocalDatasourceImpl } from './data/datasources/local_datasource';
 import AddTodoUseCase from './domain/usecases/add_todo';
 import RemoveTodoUseCase from './domain/usecases/remove_todo';
 import UpdateTodoCheckUseCase from './domain/usecases/update_todo_ckeck';
+import UpdateTodoTextUseCase from './domain/usecases/update_todo_text';
 
 
 function InitApp() {
@@ -28,6 +29,7 @@ function InitApp() {
     let addTodoUseCase = new AddTodoUseCase(firestoreRepository);
     let removeTodoUseCase = new RemoveTodoUseCase(firestoreRepository);
     let updateTodoCheckUseCase = new UpdateTodoCheckUseCase(firestoreRepository);
+    let updateTodoTextUseCase = new UpdateTodoTextUseCase(firestoreRepository);
 
     //! Controllers
     let todoVuex = new TodoVuex(store, {
@@ -36,6 +38,7 @@ function InitApp() {
         addTodoUseCase: addTodoUseCase,
         removeTodoUseCase: removeTodoUseCase,
         updateTodoCheckUseCase: updateTodoCheckUseCase,
+        updateTodoTextUseCase: updateTodoTextUseCase,
     })
     todoVuex.initVuexModuleIfNotYet();
 }
