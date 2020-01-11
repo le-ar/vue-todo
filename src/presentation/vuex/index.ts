@@ -8,6 +8,13 @@ export default new Vuex.Store({
     modules: {}
   },
   mutations: {
+    REGISTER_MODULE: (state, payload: string) => {
+      let modules: {
+        [key: string]: any,
+      } = state.modules;
+      modules[payload] = true;
+      state.modules = modules;
+    }
   },
   actions: {
   },

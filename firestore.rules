@@ -3,10 +3,11 @@ service cloud.firestore {
   match /databases/{database}/documents {
     match /todos/{documentId} {
       allow read, delete: if true;
-      allow create: if request.resource.data.keys().hasOnly(['text', 'is_completed'])
-        && request.resource.data.keys().hasAll(['text', 'is_completed'])
+      allow create: if request.resource.data.keys().hasOnly(['text', 'is_completed', 'createdAt'])
+        && request.resource.data.keys().hasAll(['text', 'is_completed', 'createdAt'])
         && request.resource.data.text is string
         && request.resource.data.is_completed is bool
+        && request.resource.data.createdAt is timestamp
     }
     match /docs_count/todos {
       allow read: if true;

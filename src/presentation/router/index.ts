@@ -10,21 +10,29 @@ const routes = [
     path: '/',
     name: 'home',
     component: Home,
-  },
-  {
-    path: '/page/:id',
-    name: 'page',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Page.vue'),
-    beforeEnter: (to: Route, from: Route, next: Function) => {      
-      let parsedInt = parseFloat(to.params.id);
+    children: [
+      {
+        path: 'page/:id',
+        name: 'page',
+        component: () => import(/* webpackChunkName: "page" */ '../views/Page.vue'),
+        beforeEnter: (to: Route, from: Route, next: Function) => {
+          let parsedInt = parseFloat(to.params.id);
 
-      if (isNaN(parsedInt) || !Number.isInteger(parsedInt)) {
-        next('/');
+          if (isNaN(parsedInt) || !Number.isInteger(parsedInt) || parsedInt < 1) {
+            next('/');
+          }
+
+          next();
+        },
+        props: (route: Route) => ({ id: parseInt(route.params.id) - 1 })
+      },
+      {
+        path: '*',
+        name: 'pageDefault',
+        component: () => import(/* webpackChunkName: "page" */ '../views/Page.vue'),
+        props: (route: Route) => ({ id: 0 })
       }
-
-      next();
-    },
-    props: (route: Route) => ({ id: parseInt(route.params.id) })
+    ],
   },
   {
     path: '*',

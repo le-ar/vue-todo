@@ -1,13 +1,23 @@
 import GetTodoCountUseCase from "@/domain/usecases/get_todo_count";
 import { MutationTree, ActionTree, Store } from 'Vuex';
+import GetAllTodosUseCase from '@/domain/usecases/get_all_todos';
+import AddTodoUseCase from '@/domain/usecases/add_todo';
 
 const moduleName = 'todo';
 
 class TodoVuex {
-    usecases: { getTodoCountUseCase: GetTodoCountUseCase };
+    usecases: {
+        getTodoCountUseCase: GetTodoCountUseCase,
+        getAllTodosUseCase: GetAllTodosUseCase,
+        addTodoUseCase: AddTodoUseCase,
+    };
     vuex: Store<any>;
 
-    constructor(vuex: Store<any>, usecases: { getTodoCountUseCase: GetTodoCountUseCase }) {
+    constructor(vuex: Store<any>, usecases: {
+        getTodoCountUseCase: GetTodoCountUseCase,
+        getAllTodosUseCase: GetAllTodosUseCase,
+        addTodoUseCase: AddTodoUseCase,
+    }) {
         this.usecases = usecases;
         this.vuex = vuex;
     }
@@ -15,17 +25,22 @@ class TodoVuex {
     initVuexModuleIfNotYet() {
         if (typeof this.vuex.state.modules[moduleName] === 'undefined') {
             this.vuex.registerModule(moduleName, {
+                namespaced: true,
                 state: this.generateState(),
                 actions: this.actions,
                 mutations: this.mutations,
             });
+            this.vuex.commit('REGISTER_MODULE', moduleName);
         }
     }
 
     generateState() {
         return {
-            isTodosLoaded: false,
+            isTodosCountLoaded: false,
             todosCount: 0,
+            currentPage: -1,
+            isTodosLoaded: false,
+            allTodos: [],
         };
     }
 
@@ -34,14 +49,38 @@ class TodoVuex {
             let todosCount = await this.usecases.getTodoCountUseCase.execute();
 
             commit('SET_TODOS_COUNT', todosCount);
+            commit('SET_TODOS_COUNT_LOADED', true);
+        },
+        ADD_TODO: async ({ dispatch }, payload) => {
+            await this.usecases.addTodoUseCase.execute(payload);
+            dispatch('GET_TODOS_COUNT');
+            dispatch('LOAD_TODOS');
+        },
+        LOAD_TODOS: async ({ commit, state }) => {
+            commit('SET_IS_TODOS_LOADED', false);
+            commit('SET_ALL_TODOS', await this.usecases.getAllTodosUseCase.execute());
+            commit('SET_IS_TODOS_LOADED', true);
         }
     }
 
     mutations: MutationTree<any> = {
-        SET_TODOS_COUNT: ({ state }, payload) => {
+        SET_TODOS_COUNT: (state, payload) => {
+
             state.todosCount = payload;
-        }
+        },
+        SET_TODOS_COUNT_LOADED: (state, payload) => {
+            state.isTodosCountLoaded = payload;
+        },
+        SET_CURRENT_PAGE: (state, payload) => {
+            state.currentPage = payload;
+        },
+        SET_IS_TODOS_LOADED: (state, payload) => {
+            state.isTodosLoaded = payload;
+        },
+        SET_ALL_TODOS: (state, payload) => {
+            state.allTodos = payload;
+        },
     }
 }
 
-export default TodoVuex;
+export { moduleName, TodoVuex };
