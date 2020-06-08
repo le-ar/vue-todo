@@ -1,6 +1,6 @@
-import firebaseConfig from './firestore.key.secure.json';
+// import firebaseConfig from './firestore.key.secure.json';
 import firebase from 'firebase/app';
-import { FirestoreDatasourceImpl } from './data/datasources/firestore_datasource';
+import { FirestoreDatasourceImpl, FirestoreDatasourceImplLocal, FirestoreDatasourceImplLocalStorage } from './data/datasources/firestore_datasource';
 import FirestoreRepositoryImpl from './data/repositories/firestore_repository_impl';
 import GetTodoCountUseCase from './domain/usecases/get_todo_count';
 import { TodoVuex } from './presentation/vuex/todo_vuex';
@@ -12,12 +12,14 @@ import RemoveTodoUseCase from './domain/usecases/remove_todo';
 import UpdateTodoCheckUseCase from './domain/usecases/update_todo_ckeck';
 import UpdateTodoTextUseCase from './domain/usecases/update_todo_text';
 
+let saveToLocalStorage: boolean = false;
 
 function InitApp() {
-    firebase.initializeApp(firebaseConfig);
+    // firebase.initializeApp(firebaseConfig);
 
     //! Datasources
-    let firestoreDatasource = new FirestoreDatasourceImpl(firebase.firestore());
+    // let firestoreDatasource = new FirestoreDatasourceImpl(firebase.firestore());
+    let firestoreDatasource = saveToLocalStorage ? new FirestoreDatasourceImplLocalStorage() : new FirestoreDatasourceImplLocal();
     let localDatasource = new LocalDatasourceImpl();
 
     //! Repositories

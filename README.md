@@ -1,5 +1,11 @@
 # kt-team
 
+## Settings
+
+Save to localStorage:
+1. Open ```src/init.ts```
+2. Change var at line 15
+
 ## Project setup
 ```
 yarn install

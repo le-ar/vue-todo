@@ -74,6 +74,7 @@ export default class Detailed extends Vue {
 
     var t = new Date(1970, 0, 1);
     t.setSeconds(todo.createdAt);
+
     return t.toLocaleString() + ' (GMT)';
   }
 
